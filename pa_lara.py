@@ -1,12 +1,13 @@
+# PA project
 from random import random
 import speech_recognition as sr     # sr module
 import datetime                     # d&t module
 import requests
+import pyttsx3 as p
 import pyjokes
 import random
 import webbrowser as wb              # web module
 from translate import Translator     # t mod
-import pyttsx3 as p
 from pprint import pprint
 now = datetime.datetime.now()       # m.c.method format
 
@@ -14,6 +15,7 @@ now = datetime.datetime.now()       # m.c.method format
 r = sr.Recognizer()                     # instance of the recognizer class
 r1 = sr.Recognizer()
 r2 = sr.Recognizer()
+
 engine = p.init()
 voices = engine.getProperty('voices')
 engine.setProperty('rate', 196)
@@ -22,11 +24,12 @@ engine.setProperty('voice', voices[1].id)
 
 translation = {'translate', 'Translation'}
 searching = {'search', 'open', 'visit', 'webpage'}
-zoe_close = {'stop', 'end', 'close', 'thank you', 'thank you Lara'}
-weather = {'weather', 'What is today\'s weather'}
+weather = {'weather', 'What is today\'s weather', 'climate'}
 joc = {'joke', 'jokes', 'tell me a joke'}
 action = ["What can I do for you?",
           "How can I help?", "What can I do for you today?"]
+zoe_close = {'stop', 'end', 'close', 'thank you', 'thank you Lara'}
+
 with sr.Microphone() as source:
     engine.say("Lara is listening. Who is this ?")
     engine.runAndWait()
@@ -44,12 +47,12 @@ with sr.Microphone() as source:
         engine.runAndWait()
         au = r.listen(source)
         p = r.recognize_google(au)
-        print(p)
-        if p == "today":
+        print("\t"+lan1+":"+p)
+        if p == "today":  # date and time
             engine.say(now)
             engine.runAndWait()
             print(now)
-        elif p in translation:
+        elif p in translation:  # transalation
             print("From which language you wanna translate?")
             engine.say("From which language you wanna translate?")
             engine.runAndWait()
@@ -78,7 +81,7 @@ with sr.Microphone() as source:
             engine.say(translator.translate(t))
             engine.runAndWait()
 
-        elif p in searching:
+        elif p in searching:  # web search
             au = r1.listen(source)
             p = r1.recognize_google(au)
             print(p)
@@ -86,7 +89,7 @@ with sr.Microphone() as source:
             engine.runAndWait()
             wb.open('https://www.google.com/search?q='+p)
 
-        elif p in weather:
+        elif p in weather:  # weather
             print("Of which city ?")
             engine.say("Of which city ?")
             engine.runAndWait()
@@ -99,7 +102,7 @@ with sr.Microphone() as source:
             data = requests.get(base_url).json()
             print(data)
 
-        elif p in joc:
+        elif p in joc:  # joke
             My_joke = pyjokes.get_joke(language="en", category="all")
             print(My_joke)
             engine.say(My_joke)
